@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Product Information</title>
+	<!-- Mobile Specific Metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<!-- Font-->
+	<link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+	<!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+	<!-- Main Style Css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+</head>
+<body class="form-v6">
+	<div class="page-content">
+		<div class="form-v6-content">
+			<div class="form-left">
+				<img src="{% static 'images/form-v6.jpg' %}" alt="form">
+			</div>
+			<form class="form-detail" method="post">
+				{% csrf_token %}
+				<h2>Login Details</h2>
+				<div class="form-row">
+					<input type="text" name="email" id="your-email" class="input-text" placeholder="Mart-Name" required>
+				</div>
+				<div class="form-row">
+					<input type="password" name="password" id="password" class="input-text" placeholder="Password" required>
+				</div>
+				<div class="form-row-last">
+					<input type="submit" name="register" class="register" value="login">
+				</div>
+				<center><p style="color: black;">{{status}}</p></center>
+			</form>
+		</div>
+	</div>
+	 <!-- Jquery JS-->
+	 <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+	 <!-- Vendor JS-->
+	 <script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+	 <script src="{% static 'vendor/datepicker/moment.min.js' %}"></script>
+	 <script src="{% static 'vendor/datepicker/daterangepicker.js' %}"></script>
+ 
+	 <!-- Main JS-->
+	 <script src="{% static 'js/global.js' %}"></script>
+</body>
+</html>
