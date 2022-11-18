@@ -1,0 +1,120 @@
+{% extends "EP.html"%}
+{% load static %}
+{% block "content" %}
+<link rel="stylesheet" href="{% static 'css/style1.css' %}" />
+<div class="card-heading"></div>
+<div class="card-body">
+    <style>
+        .remove_btn{
+            background-color: rgb(243, 167, 26);
+        }
+    </style>
+    <div class="shopping-cart">
+        <h2 class="title">Shopping Cart</h2>
+        <div class="container">
+            <form class="form" method="POST">
+                <div class="form__group">
+                    <label for="country">Products</label>
+                    <select id="product" name="country" data-dropdown>
+                        <option value="">Please select a Product</option>
+                        {% for i in name %}
+                        <option value="{{i}}">{{i}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn">Add</button>
+            </form>
+        </div>
+        <div class="container-fluid">
+            <table class="table table-striped table-sm" id="my_friends">
+                <thead>
+                    <tr>
+                        <th>SLNO</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <!-- <tr>
+                    {% for i in resp %}
+                    <td>{{i.id}}</td>
+                    <td>{{i.name}}</td>
+                    <td><input type="number" name="qty"></td>
+                    <td>{{i.price}}</td>
+                    <td><button>Remove</button></td>
+                    {% endfor %}
+                </tr> -->
+                </tbody>
+            </table>
+            <center><div class="totals-item totals-item-total">
+                <br><h5>Grand Total</h5>
+                <div class="totals-value" id="cart-total">
+                   Rs <span id = "total-cost"></span>
+                </div>
+              </div></center>
+              <button class="btn" onclick="display();">Checkout</button>
+        </div>
+    </div>
+</div>
+</div>
+<script src="{% static 'js/dropdown.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+    let total = 0;
+    var dict = {};
+    function dictToURI(dict) {
+        var str = [];
+        for(var p in dict){
+           str.push(encodeURIComponent(p) + "=" + encodeURIComponent(dict[p]));
+        }
+        return str.join("&");
+      }
+    function display(){
+        let url = window.location.origin + "/modDB?" + dictToURI(dict);
+        window.open(url,"_self");
+    };
+    $(document).ready(function() {
+        $('form').on('submit', function(event) {
+          $.ajax({
+                  data : {
+                      search_val : $('#product').val(),
+                  },
+                  type : 'POST',
+                  url : '/billing',
+                  success: function (response) {
+                    var tbodyRef = document.getElementById('my_friends').getElementsByTagName('tbody')[0];
+                    var newRow = tbodyRef.insertRow();
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(response.name[0]['id']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(response.name[0]['name']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createElement("INPUT");
+                    newText.setAttribute("type", "number");
+                    newText.setAttribute("class", "qty");
+                    newText.onchange = function(){
+                        var full = document.getElementsByClassName('qty');
+                        const arr = [...full].map(input => input.value);
+                        var newCell = newRow.insertCell();
+                        var price = arr[arr.length - 1]*response.name[0]['price']
+                        dict[response.name[0]['name']] = arr[arr.length - 1]
+                        var newText = document.createTextNode("Rs " + price);
+                        newCell.appendChild(newText);
+                        total = total + price;
+                        document.getElementById('total-cost').innerHTML = total;
+                    };
+                    newCell.appendChild(newText);
+                  },
+                }).done(function(data) {
+                    if (data.error) {
+                      alert("Error")
+                    }
+                });
+            event.preventDefault();
+          });
+        });
+</script>
+{% endblock %}
